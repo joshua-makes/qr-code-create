@@ -3,9 +3,7 @@
 import { cn } from '@/lib/utils';
 import { InputHTMLAttributes, forwardRef } from 'react';
 
-interface SliderProps extends InputHTMLAttributes<HTMLInputElement> {
-  label?: string;
-}
+type SliderProps = InputHTMLAttributes<HTMLInputElement>;
 
 const Slider = forwardRef<HTMLInputElement, SliderProps>(({ className, ...props }, ref) => {
   return (

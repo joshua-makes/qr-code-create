@@ -5,7 +5,6 @@ import { cn } from '@/lib/utils';
 interface ToggleProps {
   checked: boolean;
   onChange: (checked: boolean) => void;
-  label?: string;
   id?: string;
   className?: string;
 }
