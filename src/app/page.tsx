@@ -127,7 +127,7 @@ export default function Home() {
             className="mx-4 mt-3 flex items-start gap-2 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2.5 text-xs text-amber-800 dark:border-amber-800/50 dark:bg-amber-950/30 dark:text-amber-400 shrink-0"
           >
             <span className="mt-px">⚠️</span>
-            <span>Large logo may reduce scannability — consider Medium.</span>
+            <span>Large logo may reduce scannability — test first or consider Medium.</span>
           </div>
         )}
 
