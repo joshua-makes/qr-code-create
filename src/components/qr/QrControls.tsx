@@ -49,7 +49,7 @@ export function QrAppearanceCard({ config, onChange }: QrControlsProps) {
       <CardContent className="space-y-4">
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <Label htmlFor="qr-size">Size: {config.size}px</Label>
+            <Label htmlFor="qr-size">Download Resolution: {config.size}px</Label>
           </div>
           <Slider
             id="qr-size"
@@ -61,7 +61,7 @@ export function QrAppearanceCard({ config, onChange }: QrControlsProps) {
           />
           <div className="flex justify-between text-xs text-gray-400">
             <span>128px</span>
-            <span>1024px</span>
+            <span>1024px (high res)</span>
           </div>
         </div>
 

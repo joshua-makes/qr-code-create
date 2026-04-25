@@ -19,30 +19,36 @@ const eccMap: Record<string, 'L' | 'M' | 'Q' | 'H'> = {
 
 const MAX_PREVIEW = 480;
 
+const FALLBACK_LOGO_SIZE = 256;
+
 /** Draws the image onto a canvas with rounded corners and returns a new data URL. */
 function applyRoundedCorners(dataUrl: string): Promise<string> {
   return new Promise((resolve) => {
     const img = new Image();
+    img.onerror = () => resolve(dataUrl);
     img.onload = () => {
+      // SVG images may report 0 natural dimensions; fall back to a fixed size
+      const w = img.naturalWidth > 0 ? img.naturalWidth : FALLBACK_LOGO_SIZE;
+      const h = img.naturalHeight > 0 ? img.naturalHeight : FALLBACK_LOGO_SIZE;
       const canvas = document.createElement('canvas');
-      canvas.width = img.width;
-      canvas.height = img.height;
+      canvas.width = w;
+      canvas.height = h;
       const ctx = canvas.getContext('2d');
       if (!ctx) { resolve(dataUrl); return; }
-      const r = Math.min(img.width, img.height) * 0.2;
+      const r = Math.min(w, h) * 0.2;
       ctx.beginPath();
       ctx.moveTo(r, 0);
-      ctx.lineTo(img.width - r, 0);
-      ctx.quadraticCurveTo(img.width, 0, img.width, r);
-      ctx.lineTo(img.width, img.height - r);
-      ctx.quadraticCurveTo(img.width, img.height, img.width - r, img.height);
-      ctx.lineTo(r, img.height);
-      ctx.quadraticCurveTo(0, img.height, 0, img.height - r);
+      ctx.lineTo(w - r, 0);
+      ctx.quadraticCurveTo(w, 0, w, r);
+      ctx.lineTo(w, h - r);
+      ctx.quadraticCurveTo(w, h, w - r, h);
+      ctx.lineTo(r, h);
+      ctx.quadraticCurveTo(0, h, 0, h - r);
       ctx.lineTo(0, r);
       ctx.quadraticCurveTo(0, 0, r, 0);
       ctx.closePath();
       ctx.clip();
-      ctx.drawImage(img, 0, 0);
+      ctx.drawImage(img, 0, 0, w, h);
       resolve(canvas.toDataURL('image/png'));
     };
     img.src = dataUrl;
@@ -88,7 +94,10 @@ export function QrPreview({ config, logoDataUrl }: QrPreviewProps) {
             imageOptions: {
               crossOrigin: 'anonymous' as const,
               margin: 2,
-              imageSize: config.logoSizePct / 100,
+              // imageSize is a coverage coefficient, not a pixel percentage.
+              // Formula: imageSize = (pct/100)^2 * 4 makes the logo visually
+              // occupy ~logoSizePct% of the QR width (calibrated for Q ECC).
+              imageSize: Math.pow(config.logoSizePct / 100, 2) * 4,
             },
           }
         : {}),
