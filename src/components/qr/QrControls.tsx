@@ -5,11 +5,10 @@ import { Label } from '@/components/ui/Label';
 import { Slider } from '@/components/ui/Slider';
 import { Select } from '@/components/ui/Select';
 import { ColorInput } from '@/components/ui/ColorInput';
-import { Card, CardContent, CardHeader } from '@/components/ui/Card';
 import { Toggle } from '@/components/ui/Toggle';
 import { clamp } from '@/lib/utils';
 
-interface QrControlsProps {
+interface SectionProps {
   config: QrConfig;
   onChange: (updates: Partial<QrConfig>) => void;
 }
@@ -25,235 +24,213 @@ const COLOR_PRESETS = [
   { label: 'Amber',   fg: '#78350f', bg: '#fef3c7' },
 ] as const;
 
-export function QrContentCard({ config, onChange }: QrControlsProps) {
+function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <Card>
-      <CardHeader>
-        <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">Content</h2>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-2">
-          <Label htmlFor="qr-text">URL or Text</Label>
-          <textarea
-            id="qr-text"
-            value={config.text}
-            onChange={(e) => onChange({ text: e.target.value })}
-            maxLength={2000}
-            rows={3}
-            placeholder="https://example.com"
-            className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:placeholder:text-gray-500 resize-none"
-          />
-          <p className="text-xs text-gray-500 dark:text-gray-400 text-right">
-            {config.text.length} / 2000
-          </p>
-        </div>
-      </CardContent>
-    </Card>
+    <p className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">
+      {children}
+    </p>
   );
 }
 
-export function QrAppearanceCard({ config, onChange }: QrControlsProps) {
+const PRESET_BTN = (active: boolean) =>
+  `rounded-lg border px-3 py-2.5 text-sm font-medium capitalize transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
+    active
+      ? 'border-blue-600 bg-blue-600 text-white shadow-sm'
+      : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300 dark:border-gray-700 dark:bg-gray-800/60 dark:text-gray-200 dark:hover:border-gray-600'
+  }`;
+
+export function QrContentSection({ config, onChange }: SectionProps) {
   return (
-    <Card>
-      <CardHeader>
-        <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">Appearance</h2>
-      </CardHeader>
-      <CardContent className="space-y-4">
+    <div className="space-y-3">
+      <SectionLabel>URL or Text</SectionLabel>
+      <textarea
+        id="qr-text"
+        value={config.text}
+        onChange={(e) => onChange({ text: e.target.value })}
+        maxLength={2000}
+        rows={5}
+        placeholder="https://example.com"
+        className="w-full rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-white dark:border-gray-700 dark:bg-gray-800/60 dark:text-gray-100 dark:placeholder:text-gray-500 dark:focus:bg-gray-800 resize-none transition-colors"
+      />
+      <p className="text-xs text-gray-400 text-right tabular-nums">{config.text.length} / 2000</p>
+    </div>
+  );
+}
 
-        {/* Download Resolution */}
-        <div className="space-y-2">
-          <Label>Download Resolution</Label>
-          <div className="flex gap-2">
-            {([256, 512, 1024] as const).map((s) => (
-              <button
-                key={s}
-                type="button"
-                onClick={() => onChange({ size: s })}
-                className={`flex-1 rounded-md border px-2 py-2 text-sm font-medium transition-colors ${
-                  config.size === s
-                    ? 'border-blue-600 bg-blue-600 text-white'
-                    : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700'
-                }`}
-              >
-                <span className="block">{s === 256 ? 'Small' : s === 512 ? 'Medium' : 'Large'}</span>
-                <span className="block text-xs opacity-70">{s}px</span>
-              </button>
-            ))}
-          </div>
+export function QrStyleSection({ config, onChange }: SectionProps) {
+  return (
+    <div className="space-y-6">
+
+      {/* Shape */}
+      <div className="space-y-2.5">
+        <SectionLabel>Shape</SectionLabel>
+        <div className="grid grid-cols-2 gap-2">
+          {(['square', 'circle'] as QrShape[]).map((s) => (
+            <button key={s} type="button" onClick={() => onChange({ shape: s })} className={PRESET_BTN(config.shape === s)}>
+              {s}
+            </button>
+          ))}
         </div>
+      </div>
 
-        {/* Shape */}
-        <div className="space-y-2">
-          <Label>Shape</Label>
-          <div className="flex gap-2">
-            {(['square', 'circle'] as QrShape[]).map((s) => (
-              <button
-                key={s}
-                type="button"
-                onClick={() => onChange({ shape: s })}
-                className={`flex-1 rounded-md border px-3 py-2 text-sm font-medium capitalize transition-colors ${
-                  config.shape === s
-                    ? 'border-blue-600 bg-blue-600 text-white'
-                    : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700'
-                }`}
-              >
-                {s}
-              </button>
-            ))}
-          </div>
-        </div>
+      {/* Dot Style */}
+      <div className="space-y-2.5">
+        <SectionLabel>Dot Style</SectionLabel>
+        <Select id="qr-dot-style" value={config.dotStyle} onChange={(e) => onChange({ dotStyle: e.target.value as DotStyle })}>
+          <option value="square">Square</option>
+          <option value="dots">Dots</option>
+          <option value="rounded">Rounded</option>
+          <option value="extra-rounded">Extra Rounded</option>
+          <option value="classy">Classy</option>
+          <option value="classy-rounded">Classy Rounded</option>
+        </Select>
+      </div>
 
-        {/* Dot Style */}
-        <div className="space-y-2">
-          <Label htmlFor="qr-dot-style">Dot Style</Label>
-          <Select
-            id="qr-dot-style"
-            value={config.dotStyle}
-            onChange={(e) => onChange({ dotStyle: e.target.value as DotStyle })}
-          >
-            <option value="square">Square</option>
-            <option value="dots">Dots</option>
-            <option value="rounded">Rounded</option>
-            <option value="extra-rounded">Extra Rounded</option>
-            <option value="classy">Classy</option>
-            <option value="classy-rounded">Classy Rounded</option>
-          </Select>
-        </div>
-
-        {/* Corner Styles */}
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="qr-corner-sq">Corner Squares</Label>
-            <Select
-              id="qr-corner-sq"
-              value={config.cornerSquareStyle}
-              onChange={(e) => onChange({ cornerSquareStyle: e.target.value as CornerSquareStyle })}
-            >
+      {/* Corners */}
+      <div className="space-y-2.5">
+        <SectionLabel>Corners</SectionLabel>
+        <div className="grid grid-cols-2 gap-3">
+          <div className="space-y-1.5">
+            <Label htmlFor="qr-corner-sq" className="text-xs text-gray-500 dark:text-gray-400">Squares</Label>
+            <Select id="qr-corner-sq" value={config.cornerSquareStyle} onChange={(e) => onChange({ cornerSquareStyle: e.target.value as CornerSquareStyle })}>
               <option value="square">Square</option>
               <option value="extra-rounded">Rounded</option>
               <option value="dot">Dot</option>
             </Select>
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="qr-corner-dot">Corner Dots</Label>
-            <Select
-              id="qr-corner-dot"
-              value={config.cornerDotStyle}
-              onChange={(e) => onChange({ cornerDotStyle: e.target.value as CornerDotStyle })}
-            >
+          <div className="space-y-1.5">
+            <Label htmlFor="qr-corner-dot" className="text-xs text-gray-500 dark:text-gray-400">Inner Dots</Label>
+            <Select id="qr-corner-dot" value={config.cornerDotStyle} onChange={(e) => onChange({ cornerDotStyle: e.target.value as CornerDotStyle })}>
               <option value="square">Square</option>
               <option value="dot">Dot</option>
             </Select>
           </div>
         </div>
+      </div>
 
-        {/* Margin */}
-        <div className="space-y-2">
+      {/* Color Presets */}
+      <div className="space-y-2.5">
+        <SectionLabel>Presets</SectionLabel>
+        <div className="flex flex-wrap gap-2">
+          {COLOR_PRESETS.map((preset) => (
+            <button
+              key={preset.label}
+              type="button"
+              title={preset.label}
+              onClick={() => onChange({ fgColor: preset.fg, bgColor: preset.bg, bgTransparent: false })}
+              className="relative h-9 w-9 rounded-lg border-2 border-gray-200 dark:border-gray-700 overflow-hidden hover:scale-110 hover:border-blue-400 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500"
+              style={{ background: preset.bg }}
+            >
+              <span className="absolute inset-[28%] rounded-sm" style={{ background: preset.fg }} />
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Colors */}
+      <div className="space-y-2.5">
+        <SectionLabel>Colors</SectionLabel>
+        <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <Label htmlFor="qr-margin">Margin: {config.margin}</Label>
-          </div>
-          <Slider
-            id="qr-margin"
-            min={0}
-            max={8}
-            step={1}
-            value={config.margin}
-            onChange={(e) => onChange({ margin: clamp(Number(e.target.value), 0, 8) })}
-          />
-          <div className="flex justify-between text-xs text-gray-400">
-            <span>0</span>
-            <span>8</span>
-          </div>
-        </div>
-
-        {/* Error Correction */}
-        <div className="space-y-2">
-          <Label htmlFor="qr-ecc">Error Correction</Label>
-          <Select
-            id="qr-ecc"
-            value={config.ecc}
-            onChange={(e) => onChange({ ecc: e.target.value as EccLevel })}
-          >
-            <option value="L">L — Low (7%)</option>
-            <option value="M">M — Medium (15%)</option>
-            <option value="Q">Q — Quartile (25%)</option>
-            <option value="H">H — High (30%)</option>
-          </Select>
-        </div>
-
-        {/* Color Presets */}
-        <div className="space-y-2">
-          <Label>Color Presets</Label>
-          <div className="flex flex-wrap gap-2">
-            {COLOR_PRESETS.map((preset) => (
-              <button
-                key={preset.label}
-                type="button"
-                title={preset.label}
-                onClick={() => onChange({ fgColor: preset.fg, bgColor: preset.bg, bgTransparent: false })}
-                className="relative h-8 w-8 rounded-md border border-gray-300 dark:border-gray-600 overflow-hidden hover:scale-110 transition-transform focus:outline-none focus:ring-2 focus:ring-blue-500"
-                style={{ background: preset.bg }}
-              >
-                <span
-                  className="absolute inset-[25%] rounded-sm"
-                  style={{ background: preset.fg }}
-                />
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Colors */}
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="qr-fg">Foreground</Label>
+            <Label htmlFor="qr-fg" className="text-sm text-gray-700 dark:text-gray-300">Foreground</Label>
             <div className="flex items-center gap-2">
-              <ColorInput
-                id="qr-fg"
-                value={config.fgColor}
-                onChange={(e) => onChange({ fgColor: e.target.value })}
-              />
-              <span className="text-sm text-gray-600 dark:text-gray-400 font-mono">{config.fgColor}</span>
+              <span className="text-xs text-gray-400 font-mono">{config.fgColor}</span>
+              <ColorInput id="qr-fg" value={config.fgColor} onChange={(e) => onChange({ fgColor: e.target.value })} />
             </div>
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="qr-bg">Background</Label>
+          <div className="flex items-center justify-between">
+            <Label htmlFor="qr-bg" className="text-sm text-gray-700 dark:text-gray-300">Background</Label>
             <div className="flex items-center gap-2">
+              <span className="text-xs text-gray-400 font-mono">{config.bgTransparent ? 'none' : config.bgColor}</span>
               <ColorInput
                 id="qr-bg"
                 value={config.bgColor}
                 onChange={(e) => onChange({ bgColor: e.target.value })}
                 disabled={config.bgTransparent}
-                className={config.bgTransparent ? 'opacity-40 cursor-not-allowed' : ''}
+                className={config.bgTransparent ? 'opacity-30 cursor-not-allowed' : ''}
               />
-              <span className="text-sm text-gray-600 dark:text-gray-400 font-mono">
-                {config.bgTransparent ? 'transparent' : config.bgColor}
-              </span>
             </div>
           </div>
+          <div className="flex items-center justify-between pt-1">
+            <Label htmlFor="bg-transparent" className="text-sm text-gray-700 dark:text-gray-300">Transparent background</Label>
+            <Toggle id="bg-transparent" checked={config.bgTransparent} onChange={(checked) => onChange({ bgTransparent: checked })} />
+          </div>
         </div>
+      </div>
 
-        {/* Transparent Background */}
-        <div className="flex items-center justify-between">
-          <Label htmlFor="bg-transparent">Transparent background</Label>
-          <Toggle
-            id="bg-transparent"
-            checked={config.bgTransparent}
-            onChange={(checked) => onChange({ bgTransparent: checked })}
-          />
-        </div>
-
-      </CardContent>
-    </Card>
+    </div>
   );
 }
 
-/** @deprecated Use QrContentCard + QrAppearanceCard separately */
-export function QrControls({ config, onChange }: QrControlsProps) {
+export function QrExportSection({ config, onChange }: SectionProps) {
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
+
+      {/* Resolution */}
+      <div className="space-y-2.5">
+        <SectionLabel>Download Resolution</SectionLabel>
+        <div className="grid grid-cols-3 gap-2">
+          {([256, 512, 1024] as const).map((s) => (
+            <button key={s} type="button" onClick={() => onChange({ size: s })} className={PRESET_BTN(config.size === s)}>
+              <span className="block">{s === 256 ? 'Small' : s === 512 ? 'Medium' : 'Large'}</span>
+              <span className="block text-xs opacity-60">{s}px</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Quiet Zone */}
+      <div className="space-y-2.5">
+        <div className="flex items-center justify-between">
+          <SectionLabel>Quiet Zone (margin)</SectionLabel>
+          <span className="text-xs font-mono text-gray-400 tabular-nums">{config.margin}</span>
+        </div>
+        <Slider
+          id="qr-margin"
+          min={0} max={8} step={1} value={config.margin}
+          onChange={(e) => onChange({ margin: clamp(Number(e.target.value), 0, 8) })}
+        />
+        <div className="flex justify-between text-xs text-gray-400">
+          <span>None</span>
+          <span>Large</span>
+        </div>
+      </div>
+
+      {/* Error Correction */}
+      <div className="space-y-2.5">
+        <SectionLabel>Error Correction</SectionLabel>
+        <Select id="qr-ecc" value={config.ecc} onChange={(e) => onChange({ ecc: e.target.value as EccLevel })}>
+          <option value="L">Low — 7% recovery</option>
+          <option value="M">Medium — 15% recovery</option>
+          <option value="Q">Quartile — 25% recovery</option>
+          <option value="H">High — 30% recovery</option>
+        </Select>
+      </div>
+
+    </div>
+  );
+}
+
+/** @deprecated — use QrContentSection / QrStyleSection / QrExportSection */
+export function QrContentCard({ config, onChange }: SectionProps) {
+  return <QrContentSection config={config} onChange={onChange} />;
+}
+export function QrAppearanceCard({ config, onChange }: SectionProps) {
+  return (
+    <div className="space-y-6">
+      <QrStyleSection config={config} onChange={onChange} />
+      <QrExportSection config={config} onChange={onChange} />
+    </div>
+  );
+}
+export function QrControls({ config, onChange }: SectionProps) {
+  return (
+    <div className="space-y-6">
       <QrContentCard config={config} onChange={onChange} />
       <QrAppearanceCard config={config} onChange={onChange} />
     </div>
   );
 }
+
+export type { SectionProps as QrControlsProps };
+

@@ -3,7 +3,6 @@
 import { useEffect, useRef, useCallback, useState } from 'react';
 import QRCodeStyling from 'qr-code-styling';
 import type { QrConfig } from '@/lib/qr';
-import { Button } from '@/components/ui/Button';
 
 interface QrPreviewProps {
   config: QrConfig;
@@ -17,7 +16,7 @@ const eccMap: Record<string, 'L' | 'M' | 'Q' | 'H'> = {
   H: 'H',
 };
 
-const MAX_PREVIEW = 480;
+const MAX_PREVIEW = 540;
 
 const FALLBACK_LOGO_SIZE = 256;
 
@@ -148,46 +147,68 @@ export function QrPreview({ config, logoDataUrl }: QrPreviewProps) {
   const scale = displaySize / config.size;
 
   return (
-    <div className="flex flex-col items-center gap-6 w-full">
-      {/* Outer box clips to displaySize; inner div is the full-res QR scaled down */}
+    <div className="flex flex-col items-center gap-5 w-full">
+      {/* Canvas — shadow/rounding here; checkerboard when transparent */}
       <div
-        className="rounded-lg overflow-hidden shadow-md"
+        className={`overflow-hidden rounded-2xl shadow-2xl ${
+          config.bgTransparent
+            ? 'bg-checkerboard ring-1 ring-gray-200 dark:ring-gray-700'
+            : 'ring-1 ring-black/5 dark:ring-white/5'
+        }`}
         style={{ width: displaySize, height: displaySize, flexShrink: 0 }}
       >
-        <div style={{ transform: `scale(${scale})`, transformOrigin: 'top left', width: config.size, height: config.size }}>
+        <div
+          style={{
+            transform: `scale(${scale})`,
+            transformOrigin: 'top left',
+            width: config.size,
+            height: config.size,
+          }}
+        >
           <div ref={containerRef} />
         </div>
       </div>
-      <div className="flex gap-3 w-full max-w-xs">
-        <Button onClick={handleDownloadPng} className="flex-1">
-          <svg xmlns="http://www.w3.org/2000/svg" className="mr-2 h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+
+      {/* Action buttons */}
+      <div className="flex gap-2">
+        <button
+          onClick={handleDownloadPng}
+          className="inline-flex items-center gap-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
             <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
             <polyline points="7 10 12 15 17 10" />
             <line x1="12" y1="15" x2="12" y2="3" />
           </svg>
           PNG
-        </Button>
-        <Button onClick={handleDownloadSvg} variant="secondary" className="flex-1">
-          <svg xmlns="http://www.w3.org/2000/svg" className="mr-2 h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        </button>
+        <button
+          onClick={handleDownloadSvg}
+          className="inline-flex items-center gap-1.5 rounded-lg border border-gray-300 bg-white hover:bg-gray-50 active:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
             <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
             <polyline points="7 10 12 15 17 10" />
             <line x1="12" y1="15" x2="12" y2="3" />
           </svg>
           SVG
-        </Button>
-        <Button onClick={handleCopyToClipboard} variant="secondary" className="flex-1">
+        </button>
+        <button
+          onClick={handleCopyToClipboard}
+          className="inline-flex items-center gap-1.5 rounded-lg border border-gray-300 bg-white hover:bg-gray-50 active:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+        >
           {copied ? (
-            <svg xmlns="http://www.w3.org/2000/svg" className="mr-2 h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
               <polyline points="20 6 9 17 4 12" />
             </svg>
           ) : (
-            <svg xmlns="http://www.w3.org/2000/svg" className="mr-2 h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
               <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
             </svg>
           )}
           {copied ? 'Copied!' : 'Copy'}
-        </Button>
+        </button>
       </div>
     </div>
   );
