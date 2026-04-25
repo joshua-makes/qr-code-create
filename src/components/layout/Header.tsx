@@ -17,7 +17,7 @@ export function Header() {
               <rect x="14" y="19" width="2" height="2" rx="0.5" />
               <rect x="18" y="19" width="3" height="2" rx="0.5" />
             </svg>
-            QR Code Creator
+            QR Logo Lab
           </Link>
           <div className="flex items-center gap-2">
             <ThemeToggle />

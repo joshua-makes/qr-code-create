@@ -4,9 +4,41 @@ import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 
 export const metadata: Metadata = {
-  title: 'QR Code Creator',
+  metadataBase: new URL('https://qr-logo-lab.vercel.app'),
+  title: {
+    default: 'QR Logo Lab',
+    template: '%s | QR Logo Lab',
+  },
   description:
-    'Create customizable QR codes with logo embedding, color customization, and shareable links — entirely client-side.',
+    'Free QR code generator with logo embedding, custom colors, dot styles, corner styles, and transparent backgrounds — entirely in your browser, no uploads required.',
+  keywords: [
+    'QR code generator',
+    'QR code with logo',
+    'custom QR code',
+    'QR code maker',
+    'free QR code',
+    'QR code design',
+    'logo QR code',
+    'transparent QR code',
+  ],
+  authors: [{ name: 'QR Logo Lab' }],
+  openGraph: {
+    type: 'website',
+    title: 'QR Logo Lab',
+    description:
+      'Free QR code generator with logo embedding, custom colors, and more — entirely in your browser.',
+    siteName: 'QR Logo Lab',
+  },
+  twitter: {
+    card: 'summary',
+    title: 'QR Logo Lab',
+    description:
+      'Free QR code generator with logo embedding, custom colors, and more — entirely in your browser.',
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({

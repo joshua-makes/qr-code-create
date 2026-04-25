@@ -7,7 +7,7 @@ export function Footer() {
       <Container>
         <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            Built with ❤️ using Next.js and qr-code-styling
+            Built with ❤️ using Next.js and qr-code-styling &mdash; QR Logo Lab
           </p>
           <Link
             href="https://github.com/bestacles/qr-code-create"
