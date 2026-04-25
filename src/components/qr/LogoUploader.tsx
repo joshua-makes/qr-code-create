@@ -4,10 +4,8 @@ import { useRef } from 'react';
 import { QrConfig } from '@/lib/qr';
 import { Label } from '@/components/ui/Label';
 import { Button } from '@/components/ui/Button';
-import { Slider } from '@/components/ui/Slider';
 import { Toggle } from '@/components/ui/Toggle';
 import { Card, CardContent, CardHeader } from '@/components/ui/Card';
-import { clamp } from '@/lib/utils';
 
 interface LogoUploaderProps {
   config: QrConfig;
@@ -71,22 +69,22 @@ export function LogoUploader({ config, logoDataUrl, onChange, onLogoChange }: Lo
             </div>
 
             <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="logo-size">Logo Size: {config.logoSizePct}%</Label>
-              </div>
-              <Slider
-                id="logo-size"
-                min={5}
-                max={30}
-                step={1}
-                value={config.logoSizePct}
-                onChange={(e) =>
-                  onChange({ logoSizePct: clamp(Number(e.target.value), 5, 30) })
-                }
-              />
-              <div className="flex justify-between text-xs text-gray-400">
-                <span>5%</span>
-                <span>30%</span>
+              <Label>Logo Size</Label>
+              <div className="flex gap-2">
+                {([{ label: 'Small', value: 20 }, { label: 'Medium', value: 30 }, { label: 'Large', value: 40 }] as const).map(({ label, value }) => (
+                  <button
+                    key={value}
+                    type="button"
+                    onClick={() => onChange({ logoSizePct: value })}
+                    className={`flex-1 rounded-md border px-2 py-2 text-sm font-medium transition-colors ${
+                      config.logoSizePct === value
+                        ? 'border-blue-600 bg-blue-600 text-white'
+                        : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700'
+                    }`}
+                  >
+                    {label}
+                  </button>
+                ))}
               </div>
             </div>
 

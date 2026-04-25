@@ -102,10 +102,7 @@ export function QrPreview({ config, logoDataUrl }: QrPreviewProps) {
             imageOptions: {
               crossOrigin: 'anonymous' as const,
               margin: 2,
-              // imageSize is a coverage coefficient, not a pixel percentage.
-              // Formula: imageSize = (pct/100)^2 * 4 makes the logo visually
-              // occupy ~logoSizePct% of the QR width (calibrated for Q ECC).
-              imageSize: Math.pow(config.logoSizePct / 100, 2) * 4,
+              imageSize: config.logoSizePct / 100,
             },
           }
         : {}),
