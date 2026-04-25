@@ -41,5 +41,5 @@ export function enforceEccForLogo(ecc: EccLevel, hasLogo: boolean): EccLevel {
 }
 
 export function isLogoTooLarge(sizePct: number): boolean {
-  return sizePct > 25;
+  return sizePct > 40;
 }

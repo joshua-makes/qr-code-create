@@ -77,16 +77,16 @@ export function LogoUploader({ config, logoDataUrl, onChange, onLogoChange }: Lo
               <Slider
                 id="logo-size"
                 min={5}
-                max={30}
+                max={50}
                 step={1}
                 value={config.logoSizePct}
                 onChange={(e) =>
-                  onChange({ logoSizePct: clamp(Number(e.target.value), 5, 30) })
+                  onChange({ logoSizePct: clamp(Number(e.target.value), 5, 50) })
                 }
               />
               <div className="flex justify-between text-xs text-gray-400">
                 <span>5%</span>
-                <span>30%</span>
+                <span>50%</span>
               </div>
             </div>
 

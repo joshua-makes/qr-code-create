@@ -9,7 +9,7 @@ import {
   enforceEccForLogo,
   isLogoTooLarge,
 } from '@/lib/qr';
-import { QrControls } from '@/components/qr/QrControls';
+import { QrContentCard, QrAppearanceCard } from '@/components/qr/QrControls';
 import { LogoUploader } from '@/components/qr/LogoUploader';
 import { ShareLinkButton } from '@/components/qr/ShareLinkButton';
 import { Container } from '@/components/layout/Container';
@@ -101,7 +101,7 @@ export default function Home() {
           aria-live="polite"
           className="mb-6 rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800 dark:border-amber-800 dark:bg-amber-950/30 dark:text-amber-400"
         >
-          ⚠️ Logo size exceeds 25% — this may make the QR code hard to scan. Consider reducing the
+          ⚠️ Logo size exceeds 40% — this may make the QR code hard to scan. Consider reducing the
           logo size.
         </div>
       )}
@@ -109,13 +109,14 @@ export default function Home() {
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
         {/* Controls column */}
         <div className="space-y-4">
-          <QrControls config={displayConfig} onChange={handleConfigChange} />
+          <QrContentCard config={displayConfig} onChange={handleConfigChange} />
           <LogoUploader
             config={displayConfig}
             logoDataUrl={logoDataUrl}
             onChange={handleConfigChange}
             onLogoChange={handleLogoChange}
           />
+          <QrAppearanceCard config={displayConfig} onChange={handleConfigChange} />
           <ShareLinkButton config={displayConfig} />
         </div>
 
