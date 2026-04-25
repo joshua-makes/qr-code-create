@@ -39,7 +39,16 @@ const PRESET_BTN = (active: boolean) =>
       : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300 dark:border-gray-700 dark:bg-gray-800/60 dark:text-gray-200 dark:hover:border-gray-600'
   }`;
 
+// Max safe chars per ECC level (QR byte mode capacity with margin)
+const ECC_CHAR_LIMITS: Record<string, number> = {
+  L: 2900, M: 2300, Q: 1600, H: 1200,
+};
+
 export function QrContentSection({ config, onChange }: SectionProps) {
+  const limit = ECC_CHAR_LIMITS[config.ecc] ?? 900;
+  const pct = config.text.length / limit;
+  const countColor = pct >= 1 ? 'text-red-500' : pct >= 0.85 ? 'text-amber-500' : 'text-gray-400';
+
   return (
     <div className="space-y-3">
       <SectionLabel>URL or Text</SectionLabel>
@@ -47,12 +56,14 @@ export function QrContentSection({ config, onChange }: SectionProps) {
         id="qr-text"
         value={config.text}
         onChange={(e) => onChange({ text: e.target.value })}
-        maxLength={2000}
+        maxLength={limit}
         rows={5}
         placeholder="https://example.com"
         className="w-full rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-white dark:border-gray-700 dark:bg-gray-800/60 dark:text-gray-100 dark:placeholder:text-gray-500 dark:focus:bg-gray-800 resize-none transition-colors"
       />
-      <p className="text-xs text-gray-400 text-right tabular-nums">{config.text.length} / 2000</p>
+      <p className={`text-xs text-right tabular-nums ${countColor}`}>
+        {config.text.length} / {limit}
+      </p>
     </div>
   );
 }

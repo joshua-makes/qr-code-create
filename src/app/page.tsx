@@ -18,7 +18,7 @@ const TABS: { id: Tab; label: string }[] = [
   { id: 'content', label: 'Content' },
   { id: 'style',   label: 'Style' },
   { id: 'logo',    label: 'Logo' },
-  { id: 'export',  label: 'Export' },
+  { id: 'export',  label: 'Size' },
 ];
 
 const QrPreview = dynamic(

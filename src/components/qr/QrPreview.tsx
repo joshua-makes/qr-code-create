@@ -110,12 +110,19 @@ export function QrPreview({ config, logoDataUrl }: QrPreviewProps) {
     [config, effectiveLogo],
   );
 
+  const [overflowError, setOverflowError] = useState(false);
+
   useEffect(() => {
     if (!containerRef.current) return;
-    // Always recreate — qr-code-styling's update() doesn't reliably apply imageSize changes
-    containerRef.current.innerHTML = '';
-    qrRef.current = new QRCodeStyling(getOptions());
-    qrRef.current.append(containerRef.current);
+    try {
+      setOverflowError(false);
+      // Always recreate — qr-code-styling's update() doesn't reliably apply imageSize changes
+      containerRef.current.innerHTML = '';
+      qrRef.current = new QRCodeStyling(getOptions());
+      qrRef.current.append(containerRef.current);
+    } catch {
+      setOverflowError(true);
+    }
   }, [getOptions]);
 
   const handleDownloadPng = () => {
@@ -156,16 +163,28 @@ export function QrPreview({ config, logoDataUrl }: QrPreviewProps) {
         }`}
         style={{ width: displaySize, height: displaySize, flexShrink: 0 }}
       >
-        <div
-          style={{
-            transform: `scale(${scale})`,
-            transformOrigin: 'top left',
-            width: config.size,
-            height: config.size,
-          }}
-        >
-          <div ref={containerRef} />
-        </div>
+        {overflowError ? (
+          <div className="w-full h-full flex flex-col items-center justify-center gap-3 bg-gray-50 dark:bg-gray-900 px-6 text-center">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+              <line x1="12" y1="9" x2="12" y2="13" />
+              <line x1="12" y1="17" x2="12.01" y2="17" />
+            </svg>
+            <p className="text-sm font-medium text-gray-700 dark:text-gray-300">Text too long for this QR code</p>
+            <p className="text-xs text-gray-400">Shorten your text, or switch to a lower error correction level in the Export tab.</p>
+          </div>
+        ) : (
+          <div
+            style={{
+              transform: `scale(${scale})`,
+              transformOrigin: 'top left',
+              width: config.size,
+              height: config.size,
+            }}
+          >
+            <div ref={containerRef} />
+          </div>
+        )}
       </div>
 
       {/* Action buttons */}
