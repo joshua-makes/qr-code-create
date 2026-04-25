@@ -4,9 +4,9 @@ import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://qr-logo-lab.vercel.app'),
+  metadataBase: new URL('https://www.qrlogolab.com'),
   title: {
-    default: 'QR Logo Lab',
+    default: 'QR Logo Lab — Free QR Code Generator with Logo',
     template: '%s | QR Logo Lab',
   },
   description:
@@ -20,24 +20,34 @@ export const metadata: Metadata = {
     'QR code design',
     'logo QR code',
     'transparent QR code',
+    'branded QR code',
+    'QR code creator',
   ],
   authors: [{ name: 'QR Logo Lab' }],
   openGraph: {
     type: 'website',
-    title: 'QR Logo Lab',
+    url: 'https://www.qrlogolab.com',
+    title: 'QR Logo Lab — Free QR Code Generator with Logo',
     description:
-      'Free QR code generator with logo embedding, custom colors, and more — entirely in your browser.',
+      'Free QR code generator with logo embedding, custom colors, dot styles, and transparent backgrounds — entirely in your browser.',
     siteName: 'QR Logo Lab',
   },
   twitter: {
     card: 'summary',
-    title: 'QR Logo Lab',
+    title: 'QR Logo Lab — Free QR Code Generator with Logo',
     description:
       'Free QR code generator with logo embedding, custom colors, and more — entirely in your browser.',
+  },
+  alternates: {
+    canonical: 'https://www.qrlogolab.com',
   },
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
   },
 };
 

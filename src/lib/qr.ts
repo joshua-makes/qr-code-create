@@ -28,7 +28,7 @@ export const defaultConfig: QrConfig = {
   fgColor: '#000000',
   bgColor: '#ffffff',
   bgTransparent: false,
-  logoSizePct: 25,
+  logoSizePct: 15,
   logoRounded: false,
   dotStyle: 'square',
   cornerSquareStyle: 'square',
@@ -55,5 +55,5 @@ export function enforceEccForLogo(ecc: EccLevel, hasLogo: boolean): EccLevel {
 }
 
 export function isLogoTooLarge(sizePct: number): boolean {
-  return sizePct > 35;
+  return sizePct > 40;
 }

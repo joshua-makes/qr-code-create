@@ -75,9 +75,9 @@ export function LogoSection({ config, logoDataUrl, onChange, onLogoChange }: Log
             <p className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">Logo Size</p>
             <div className="grid grid-cols-3 gap-2">
               {([
-                { label: 'Small',  value: 25 },
-                { label: 'Medium', value: 35 },
-                { label: 'Large',  value: 45 },
+                { label: 'Small',  value: 15 },
+                { label: 'Medium', value: 28 },
+                { label: 'Large',  value: 42 },
               ] as const).map(({ label, value }) => (
                 <button
                   key={value}

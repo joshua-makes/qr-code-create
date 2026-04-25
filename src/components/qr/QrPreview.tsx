@@ -100,8 +100,9 @@ export function QrPreview({ config, logoDataUrl }: QrPreviewProps) {
             image: effectiveLogo,
             imageOptions: {
               crossOrigin: 'anonymous' as const,
-              margin: 2,
+              margin: 4,
               imageSize: config.logoSizePct / 100,
+              hideBackgroundDots: true,
             },
           }
         : {}),
