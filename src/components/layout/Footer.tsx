@@ -10,7 +10,7 @@ export function Footer() {
             Built with ❤️ using Next.js and qr-code-styling &mdash; QR Logo Lab
           </p>
           <Link
-            href="https://github.com/bestacles/qr-code-create"
+            href="https://github.com/joshua-makes/qr-code-create"
             target="_blank"
             rel="noopener noreferrer"
             className="text-sm text-blue-600 hover:underline dark:text-blue-400"

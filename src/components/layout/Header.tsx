@@ -22,7 +22,7 @@ export function Header() {
           <div className="flex items-center gap-2">
             <ThemeToggle />
             <Link
-              href="https://github.com/bestacles/qr-code-create"
+              href="https://github.com/joshua-makes/qr-code-create"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="GitHub repository"
