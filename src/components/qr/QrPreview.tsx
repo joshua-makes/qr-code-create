@@ -79,14 +79,22 @@ export function QrPreview({ config, logoDataUrl }: QrPreviewProps) {
       height: config.size,
       data: config.text || ' ',
       margin: config.margin * 4,
+      shape: config.shape as 'square' | 'circle',
       qrOptions: {
         errorCorrectionLevel: eccMap[config.ecc] ?? 'M',
       },
       dotsOptions: {
         color: config.fgColor,
+        type: config.dotStyle as 'square' | 'dots' | 'rounded' | 'extra-rounded' | 'classy' | 'classy-rounded',
+      },
+      cornersSquareOptions: {
+        type: config.cornerSquareStyle as 'square' | 'extra-rounded' | 'dot',
+      },
+      cornersDotOptions: {
+        type: config.cornerDotStyle as 'square' | 'dot',
       },
       backgroundOptions: {
-        color: config.bgColor,
+        color: config.bgTransparent ? 'transparent' : config.bgColor,
       },
       ...(effectiveLogo
         ? {
@@ -123,6 +131,22 @@ export function QrPreview({ config, logoDataUrl }: QrPreviewProps) {
     qrRef.current?.download({ name: 'qr-code', extension: 'svg' });
   };
 
+  const [copied, setCopied] = useState(false);
+  const handleCopyToClipboard = () => {
+    const canvas = containerRef.current?.querySelector('canvas');
+    if (!canvas) return;
+    canvas.toBlob(async (blob) => {
+      if (!blob) return;
+      try {
+        await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      } catch {
+        // Clipboard API unavailable
+      }
+    }, 'image/png');
+  };
+
   const displaySize = Math.min(config.size, MAX_PREVIEW);
   const scale = displaySize / config.size;
 
@@ -153,6 +177,19 @@ export function QrPreview({ config, logoDataUrl }: QrPreviewProps) {
             <line x1="12" y1="15" x2="12" y2="3" />
           </svg>
           SVG
+        </Button>
+        <Button onClick={handleCopyToClipboard} variant="secondary" className="flex-1">
+          {copied ? (
+            <svg xmlns="http://www.w3.org/2000/svg" className="mr-2 h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+          ) : (
+            <svg xmlns="http://www.w3.org/2000/svg" className="mr-2 h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+              <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
+            </svg>
+          )}
+          {copied ? 'Copied!' : 'Copy'}
         </Button>
       </div>
     </div>

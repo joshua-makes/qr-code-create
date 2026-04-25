@@ -101,7 +101,7 @@ export default function Home() {
           aria-live="polite"
           className="mb-6 rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800 dark:border-amber-800 dark:bg-amber-950/30 dark:text-amber-400"
         >
-          ⚠️ Logo size exceeds 40% — this may make the QR code hard to scan. Consider reducing the
+          ⚠️ Logo size exceeds 25% — this may make the QR code hard to scan. Consider reducing the
           logo size.
         </div>
       )}
