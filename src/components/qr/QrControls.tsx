@@ -135,28 +135,3 @@ export function QrControls({ config, onChange }: QrControlsProps) {
     </div>
   );
 }
-                <ColorInput
-                  id="qr-fg"
-                  value={config.fgColor}
-                  onChange={(e) => onChange({ fgColor: e.target.value })}
-                />
-                <span className="text-sm text-gray-600 dark:text-gray-400 font-mono">{config.fgColor}</span>
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="qr-bg">Background</Label>
-              <div className="flex items-center gap-2">
-                <ColorInput
-                  id="qr-bg"
-                  value={config.bgColor}
-                  onChange={(e) => onChange({ bgColor: e.target.value })}
-                />
-                <span className="text-sm text-gray-600 dark:text-gray-400 font-mono">{config.bgColor}</span>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  );
-}
