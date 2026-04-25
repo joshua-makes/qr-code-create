@@ -155,6 +155,11 @@ export function QrStyleSection({ config, onChange }: SectionProps) {
             <Label htmlFor="bg-transparent" className="text-sm text-gray-700 dark:text-gray-300">Transparent background</Label>
             <Toggle id="bg-transparent" checked={config.bgTransparent} onChange={(checked) => onChange({ bgTransparent: checked })} />
           </div>
+          {config.bgTransparent && (
+            <p className="text-xs text-gray-400 dark:text-gray-500 leading-relaxed">
+              Both the background and the white gaps between QR modules will be transparent in the exported file.
+            </p>
+          )}
         </div>
       </div>
 
@@ -205,6 +210,9 @@ export function QrExportSection({ config, onChange }: SectionProps) {
           <option value="Q">Quartile — 25% recovery</option>
           <option value="H">High — 30% recovery</option>
         </Select>
+        <p className="text-xs text-gray-400 dark:text-gray-500 leading-relaxed">
+          Higher levels let the QR scan correctly even if part of it is damaged or covered — required when embedding a logo. Higher levels make the code denser.
+        </p>
       </div>
 
     </div>

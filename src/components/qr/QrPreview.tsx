@@ -111,12 +111,10 @@ export function QrPreview({ config, logoDataUrl }: QrPreviewProps) {
 
   useEffect(() => {
     if (!containerRef.current) return;
-    if (!qrRef.current) {
-      qrRef.current = new QRCodeStyling(getOptions());
-      qrRef.current.append(containerRef.current);
-    } else {
-      qrRef.current.update(getOptions());
-    }
+    // Always recreate — qr-code-styling's update() doesn't reliably apply imageSize changes
+    containerRef.current.innerHTML = '';
+    qrRef.current = new QRCodeStyling(getOptions());
+    qrRef.current.append(containerRef.current);
   }, [getOptions]);
 
   const handleDownloadPng = () => {

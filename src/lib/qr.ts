@@ -28,7 +28,7 @@ export const defaultConfig: QrConfig = {
   fgColor: '#000000',
   bgColor: '#ffffff',
   bgTransparent: false,
-  logoSizePct: 20,
+  logoSizePct: 25,
   logoRounded: false,
   dotStyle: 'square',
   cornerSquareStyle: 'square',

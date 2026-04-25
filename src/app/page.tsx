@@ -11,7 +11,6 @@ import {
 } from '@/lib/qr';
 import { QrContentSection, QrStyleSection, QrExportSection } from '@/components/qr/QrControls';
 import { LogoSection } from '@/components/qr/LogoUploader';
-import { ShareLinkButton } from '@/components/qr/ShareLinkButton';
 
 type Tab = 'content' | 'style' | 'logo' | 'export';
 
@@ -151,11 +150,6 @@ export default function Home() {
           {activeTab === 'export' && (
             <QrExportSection config={displayConfig} onChange={handleConfigChange} />
           )}
-        </div>
-
-        {/* Sidebar footer */}
-        <div className="shrink-0 border-t border-gray-200 dark:border-gray-800 p-4">
-          <ShareLinkButton config={displayConfig} />
         </div>
       </aside>
 
